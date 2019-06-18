@@ -1,0 +1,12 @@
+---
+title: "Graphics with ggplot2"
+author: "Monique Parisi"
+date: "19/06/2019"
+output: html_document
+---
+
+# Learning gglot2
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
