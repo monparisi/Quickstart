@@ -47,7 +47,67 @@ benthic <- benthic %>%
   mutate(date = stringr::str_remove_all(id_date, "#"))
 
 benthic
+```
 
+#Explore
+
+```{r}
+summary(benthic)
+
+skimr::skim(benthic)
+
+unique(benthic$date)
+unique(benthic$id_name)
+
+ggplot(benthic, aes(date, fill = id_name)) +
+  geom_bar()
 
 ```
+
+#Buoy Data!
+
+```{r}
+#import buoy data
+
+#this doesn't work because not comma-separated! 
+buoy <- readr::read_csv(buoy_url)
+head(buoy)
+
+#use read_table2
+buoy_raw <- read_table2(buoy_url)
+head(buoy_raw)
+
+```
+
+#Wrangle!
+
+```{r}
+#create a duplicate so we can edit it without having to worry about the raw data
+buoy <- buoy_raw
+
+#Step 1. overwrite column names
+names(buoy) <- str_c(
+  names(buoy),
+  buoy %>% filter(`#YY` == "#yr"), #`` for variable name 
+  sep = "_")
+
+#looks a lot better
+names(buoy)
+
+#2. clean up slashes, get rid of '#' and "/"
+names(buoy) <- str_replace_all(names(buoy), "#", "")
+names(buoy) <- str_replace_all(names(buoy), "/", "")
+
+head(buoy)
+
+#3. delete now redundant row (because we merged row 1 and 2)
+buoy <- buoy %>% 
+  filter(`YY_yr` != "#yr")
+head(buoy)
+```
+
+#Explore!
+
+
+
 
