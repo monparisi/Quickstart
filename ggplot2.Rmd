@@ -117,7 +117,7 @@ ggplot(data = ohi_data, aes(x = OHI_score, y = HDI, colour = georegion_one)) +
 ```
 
 ```{r Change colours}
-install.packages("RColorBrewer")
+#install.packages("RColorBrewer")
 library(RColorBrewer)
 
 display.brewer.all()
