@@ -51,21 +51,18 @@ geom tells R what kind of plot
 jitter adds and random variation in the x axis 
 
 
-Boxplot
-```{r}
+
+```{r Boxplot}
 ggplot(data = ohi_data, aes (x = georegion_one)) +
   geom_bar()
 ```
 
-
-Histogram 
-```{r}
+```{r Histogram}
 ggplot(data = ohi_data, aes(x = HDI)) + 
   geom_histogram()
 ```
 
-Multiple geoms exploration
-```{r multiple geoms}
+```{r Multiple geoms}
 ohi_summary <- read_csv ("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/OHI_scores_georegion_summary.csv")
 
 ggplot(data=ohi_summary, aes(x = georegions, y = OHI_score_average)) +
@@ -73,3 +70,70 @@ ggplot(data=ohi_summary, aes(x = georegions, y = OHI_score_average)) +
   geom_jitter(data = ohi_data, aes(x = georegion_one, y = OHI_score))
 ```
 
+```{r Adding colours}
+ggplot(data = ohi_data, aes(y=OHI_score, x = HDI, color=georegion_one)) +
+  geom_point()
+ggplot(data = ohi_data) +
+  geom_point(aes(y = OHI_score, x = HDI, color=georegion_one))  
+```
+You can add colous in the ggplot or the geom but when you're doing more layers you should add it in the geom
+Anything in aes has to link to a column in the data 
+
+```{r Adding third variable}
+ggplot(data=ohi_data, aes(x = OHI_score, y = HDI, size = coastal_pop, colour = coastal_pop)) +
+  geom_point()
+```
+
+```{r Adding third discrete variable}
+ggplot (data=ohi_data, aes(x=OHI_score, y = HDI, colour = georegion_one)) +
+  geom_point()
+
+ggplot (data=ohi_data, aes(x=OHI_score, y = HDI, shape = georegion_one)) +
+  geom_point()
+```
+
+```{r Themes}
+ggplot(data=ohi_data, aes(x = OHI_score, y = HDI)) +
+  geom_point() +
+  theme_bw()
+```
+theme_bw() : removes grey background
+
+```{r Creating your own themes}
+source('https://raw.githubusercontent.com/OHI-Science/ohiprep/master/src/R/scatterTheme.txt')
+
+ggplot(data = ohi_data, aes(x = OHI_score, y = HDI)) + 
+  geom_point() + 
+  scatterTheme
+```
+
+```{r Change labels}
+ggplot(data = ohi_data, aes(x = OHI_score, y = HDI, colour = georegion_one)) + 
+  geom_point() + 
+  labs(y = "OHI score, 2017", 
+       x = "Human Development Index",
+       title = "Human development is good for oceans!",
+       colour = "Georegions")
+```
+
+```{r Change colours}
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+display.brewer.all()
+
+my_palette <- brewer.pal(n = 9, "YlOrRd")  #will choose 9 colours from the palette 
+
+ggplot(data=ohi_data, aes(x = OHI_score,
+                         y = OHI_trend,
+                         color = HDI)) +
+  geom_point(size = 3) +
+  scale_color_gradientn(colors = c("blue", "red"))
+
+ggplot(data=ohi_data, aes(x = OHI_score,
+                         y = OHI_trend,
+                         color = georegion_one)) +
+  geom_point(size = 3) +
+  scale_color_manual(values = my_palette)
+
+```
