@@ -53,3 +53,91 @@ mean (brazil_life_exp$lifeExp)
 
 ```
 
+Learning the 'select()' function
+```{r}
+#these two lines do the same thing
+select(gapminder, year, country, lifeExp)
+#drop columns by using a -
+select(gapminder, -continent, - gdpPercap)
+```
+
+Using 'filter()' and 'select()' together
+```{r}
+gap_cambodia <- filter(gapminder, country == "Cambodia")
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp)
+```
+
+Pipe operator links functions together 
+cmmd+shift+m ('and then' take whatever is on the left and feed it to the right)
+```{r}
+gapminder %>% head()
+head(gapminder)
+
+#these two pipes do the same things
+gap_cambodia <- filter(gapminder, country == "Cambodia") %>%  #and then
+  select(-continent, -lifeExp)
+
+gap_cambodia <- gapminder %>% 
+  filter(country == "Cambodia") %>% 
+  select(-continent, -lifeExp)
+```
+
+Learn 'mutate()' which adds a new column 
+```{r}
+#these two do the same thing
+gapminder %>% 
+  mutate(gdp = pop * gdpPercap) #before the = is the new column name
+
+mutate(gapminder, gdp = pop * gdpPercap)
+
+```
+
+Calculate the population in thousands for all Asian countries in the year 2007 and add it as a new column
+```{r}
+gapminder %>%
+  filter(continent == "Asia",
+         year == 2007) %>% 
+  mutate(pop_thousands = pop/1000) %>% 
+  select(country, year, pop_thousands)
+```
+
+Learning the 'group_by()' function
+```{r}
+gapminder %>% 
+  filter(year == 2002) %>% 
+  group_by(continent) %>% 
+  mutate(cont_pop = sum(pop))
+```
+
+Add in 'summarize()'
+```{r}
+gapminder %>% 
+  filter(year == 2002) %>% 
+  group_by(continent) %>% 
+  summarize(cont_pop = sum(pop))
+```
+
+```{r}
+gapminder %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_pop = sum(pop)) %>% 
+  ungroup() #good practice to ungroup after you do a grouping variable
+```
+
+'arrange()' arranges columns
+```{r}
+gapminder %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_pop = sum(pop)) %>% 
+  arrange(year)
+```
+
+What is the max GDP per continent across all years?
+```{r}
+gapminder %>% 
+  mutate(gdp = pop * gdpPercap) %>% 
+  group_by(continent) %>% 
+  mutate(max_gdp = max(gdp)) %>% 
+  filter(gdp == max_gdp)
+```
+
