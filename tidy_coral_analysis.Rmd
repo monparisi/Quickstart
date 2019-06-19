@@ -1,0 +1,53 @@
+---
+title: "Tidy Coral"
+author: "Monique Parisi"
+date: "19/06/2019"
+output: html_document
+---
+
+```{r setup warning=FALSE, message=FALSE}
+#install libraries 
+library(tidyverse) #install.packages("tidyverse")
+library(janitor) #install.packages("janitor")
+library(skimr) #install.packages("skimr")
+library(stringr) #install.packages("stringr")
+
+#ohi-science.org/uq-training
+
+#data filepaths and urls
+#benthic data
+benthic_url <- 'https://www.nodc.noaa.gov/archive/arc0054/0104255/1.1/data/0-data/cd08/100308OaAla03m.CSV'
+
+#buoy data
+buoy_url <- 'http://www.ndbc.noaa.gov/view_text_file.php?filename=mokh1h2010.txt.gz&dir=data/historical/stdmet/'
+
+```
+
+#Read in benthic data
+
+```{r benthic raw}
+benthic_raw <- read_csv(benthic_url)
+head(benthic_raw)
+```
+
+#Wrangle
+
+```{r}
+#wrangle time! 
+benthic <- benthic_raw %>% 
+  janitor::clean_names()
+
+#explore
+head(benthic)
+names(benthic)
+
+#select our columns
+benthic <- benthic %>% 
+  select(id_name, point, x, y, id_date) %>% 
+  mutate(date = stringr::str_remove_all(id_date, "#"))
+
+benthic
+
+
+```
+
