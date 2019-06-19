@@ -108,6 +108,34 @@ head(buoy)
 
 #Explore!
 
+```{r}
+ggplot(buoy, aes(WTMP_degC)) +
+  geom_bar()
+```
+
+#Join!
+
+```{r}
+head(benthic)
+head(buoy)
+
+
+#unite buoy dates
+buoy <- buoy %>% 
+  tidyr::unite(date, c(YY_yr, MM_mo, DD_dy), sep = "-") ##tidyr:: means it's from the tidyr package
+
+head(buoy)
+buoy$date
+
+#left-join benthic by date 
+bb_join <- benthic %>% 
+  left_join(buoy, by = "date")
+
+#do this to see what's going on
+bb_join %>% 
+  select(id_name, x, y, date, hh_hr, mm_mn, WTMP_degC) %>% 
+  head
+```
 
 
 
